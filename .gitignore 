@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 hosts.ini
 .hosts.ini.swp
 .gitignore 
 .ansible.cfg
+=======
+hosts.ini
+>>>>>>> ed9fec1 (First commit to repo.)
