@@ -1,0 +1,17 @@
+- hosts: raspberry_pis
+  gather_facts: yes
+
+  tasks:
+    - name: Display CPU and Memory Facts
+      debug:
+        msg: 
+          - "CPU Cores: {{ ansible_processor_cores }}"
+          - "Total RAM: {{ ansible_memtotal_mb }} MB"
+
+    - name: Get CPU Revision and Model
+      ansible.builtin.shell: egrep -w 'Revision|Model' /proc/cpuinfo
+      register: cpu_info
+
+    - name: Display CPU Revision and Model
+      debug:
+        var: cpu_info.stdout_lines

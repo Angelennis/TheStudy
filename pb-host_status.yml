@@ -1,0 +1,43 @@
+---
+- name: Gather status of Kubernetes, Docker, and system information
+  hosts: all
+  become: true
+  tasks:
+    - name: Check if Docker is installed and running
+      ansible.builtin.service_facts:
+      
+    - name: Display Docker status
+      debug:
+        msg: "Docker is {{ 'running' if ansible_facts.services['docker.service'].state == 'running' else 'stopped' }}"
+      when: "'docker.service' in ansible_facts.services"
+
+    - name: Check if K3s is installed and running
+      command: systemctl is-active k3s
+      register: k3s_status
+      ignore_errors: true
+      changed_when: false
+      when: 
+        - inventory_hostname == 'master' 
+
+    - name: Display K3s status
+      debug:
+        msg: "K3s service is {{ k3s_status.stdout }}"
+      when: 
+        - inventory_hostname == 'master' 
+      
+    - name: Get system uptime
+      ansible.builtin.command: uptime
+      register: system_uptime
+      changed_when: false
+
+    - name: Display system uptime
+      debug:
+        msg: "{{ system_uptime.stdout }}"
+
+    - name: List active (human) users
+      command: "awk -F: '$3 >= 1000 {print $1}' /etc/passwd"
+      register: active_users
+
+    - name: Display active users
+      debug:
+        msg: "{{ active_users.stdout_lines }}"
