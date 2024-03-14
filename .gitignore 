@@ -1,4 +1,1 @@
-hosts.ini
-.hosts.ini.swp
-.gitignore 
-.ansible.cfg
+igor/
